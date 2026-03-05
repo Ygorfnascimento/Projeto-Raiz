@@ -1,0 +1,16 @@
+@model Produto
+
+<h1>Excluir Produto</h1>
+
+<p>Deseja realmente excluir esse produto? </p>
+    
+<strong>@Model.Nome</strong>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="ProdutoId" />
+
+    <br /> <br />
+
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
