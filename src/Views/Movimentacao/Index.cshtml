@@ -1,0 +1,112 @@
+@using Raiz.Enums
+@using Raiz.Models;
+@using Raiz.ViewModels;
+
+@model MovimentacaoSearch
+
+<h1>Movimentações</h1>
+
+<a asp-action="Create" class="btn btn-primary">Nova</a>
+
+<fieldset>
+    <legend>Filtro de Pesquisa</legend>
+
+    <form asp-action="Index" method="get">
+        <div class="row">
+
+            <div class="col-2">
+                <label asp-for="MovimentacaoId"></label>
+                <input asp-for="MovimentacaoId" class="form-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Documento"></label>
+                <input asp-for="Documento" class="form-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="DataMovimentacaoInicial"></label>
+                <input asp-for="DataMovimentacaoInicial" type="date" class="form-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="DataMovimentacaoFinal"></label>
+                <input asp-for="DataMovimentacaoFinal" type="date" class="form-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="TipoId"></label>
+                <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="StatusId"></label>
+                <select asp-for="StatusId" asp-items="Model.Status" class="form-control">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <div class="col-2 pt-4">
+                <button type="submit" class="btn btn-primary">Pesquisar</button>
+            </div>
+
+        </div>
+    </form>
+</fieldset>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Documento</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    @if (Model.Resultado != null && Model.Resultado.Any())
+    {
+        foreach (var movimentacao in Model.Resultado)
+        {
+            <tr>
+                <td>@movimentacao.MovimentacaoId</td>
+                <td>@movimentacao.Documento</td>
+                <td>@((TipoMovimentacao)movimentacao.TipoId)</td>
+                <td>@movimentacao.DataMovimentacao.ToShortDateString()</td>
+                <td>@Enum.GetName(typeof(Status), movimentacao.StatusId)</td>
+                <td>
+
+                    <a asp-action="Detail" asp-route-id="@movimentacao.MovimentacaoId" class="btn btn-info">
+                        Detalhar
+                    </a>
+
+                    <a asp-action="Edit" asp-route-id="@movimentacao.MovimentacaoId" class="btn btn-warning">
+                        Editar
+                    </a>
+
+                    <form asp-action="Delete" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@movimentacao.MovimentacaoId" />
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Tem certeza que deseja remover?')">
+                            Remover
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="6">Nenhum resultado encontrado</td>
+        </tr>
+    }
+
+    </tbody>
+</table>

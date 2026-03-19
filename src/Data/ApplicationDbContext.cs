@@ -11,7 +11,30 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-    public DbSet<Categoria> Categorias {get; set;}
+    public DbSet<Categoria> Categorias { get; set; }
 
-    public DbSet<Produto> Produtos {get; set;}
+    public DbSet<Produto> Produtos { get; set; }
+
+    public DbSet<Movimentacao> Movimentacoes { get; set; }
+
+    public DbSet<MovimentacaoItem> MovimentacaoItens { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Relacionamento Movimentacao -> Itens
+        modelBuilder.Entity<MovimentacaoItem>()
+            .HasOne(mi => mi.Movimentacao)
+            .WithMany(m => m.Itens)
+            .HasForeignKey(mi => mi.MovimentacaoId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Relacionamento Produto -> Itens
+        modelBuilder.Entity<MovimentacaoItem>()
+            .HasOne(mi => mi.Produto)
+            .WithMany()
+            .HasForeignKey(mi => mi.ProdutoId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

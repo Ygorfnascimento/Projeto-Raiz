@@ -43,7 +43,7 @@ namespace Raiz.Controllers
 
             model.Resultado = query.ToList();
 
-            model.Categorias = LoadDropdownlistCategorias();
+            model.CategoriasSelect = LoadDropdownlistCategorias();
 
             return View(nameof(Index), model);
         }

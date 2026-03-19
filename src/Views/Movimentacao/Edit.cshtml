@@ -1,0 +1,90 @@
+@using Raiz.ViewModels;
+@using Raiz.Enums;
+
+@model MovimentacaoRegister
+
+<h1>Movimentação @Model.Movimentacao.MovimentacaoId</h1>
+
+@if (!string.IsNullOrEmpty(ViewBag.Mensagem))
+{
+    <div class="alert alert-danger">
+        @ViewBag.Mensagem
+    </div>
+}
+
+<form asp-action="Finalize" method="post">
+    <div class="row align-items-end">
+
+        <div class="col-2">
+            <label asp-for="Movimentacao.MovimentacaoId"></label>
+            <input asp-for="Movimentacao.MovimentacaoId" class="form-control" readonly />
+        </div>
+
+        <div class="col-2">
+            <label asp-for="Movimentacao.Documento"></label>
+            <input asp-for="Movimentacao.Documento" class="form-control" readonly />
+        </div>
+
+        <div class="col-2">
+            <label asp-for="Movimentacao.DataMovimentacao"></label>
+            <input asp-for="Movimentacao.DataMovimentacao" type="date" class="form-control" readonly />
+        </div>
+
+        <div class="col-2">
+            <label asp-for="Movimentacao.TipoId"></label>
+            <input type="text"
+                   class="form-control"
+                   value="@Enum.GetName(typeof(TipoMovimentacao), Model.Movimentacao.TipoId)"
+                   readonly />
+        </div>
+
+        <div class="col-4">
+            <button type="submit" class="btn btn-success me-2"
+                    onclick="return confirm('Certeza que deseja finalizar a movimentação?')">
+                Finalizar
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Voltar
+            </a>
+        </div>
+
+    </div>
+</form>
+
+<hr />
+
+<partial name="_AddItem" model="new MovimentacaoItem { MovimentacaoId = Model.Movimentacao.MovimentacaoId }" />
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Movimentacao.Itens)
+        {
+            <tr>
+                <td>@item.Produto?.Nome</td>
+                <td>@item.Quantidade</td>
+                <td>@item.Preco.ToString("C")</td>
+                <td>
+                    <a asp-action="DeleteItem"
+                       asp-route-id="@item.MovimentacaoItemId"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Remover item?')">
+                        Remover
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

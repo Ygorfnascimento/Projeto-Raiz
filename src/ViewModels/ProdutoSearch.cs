@@ -9,23 +9,22 @@ public class ProdutoSearch
     #region Filtros
 
     [DisplayName("id")]
-    public int? ProdutoId {get; set;}
+    public int? ProdutoId { get; set; }
 
     [DisplayName("Nome")]
-    public string? Nome {get; set;}
+    public string? Nome { get; set; }
 
     [DisplayName("Preço Inicial")]
-    public double? PrecoInicial {get; set;}
+    public double? PrecoInicial { get; set; }
 
-    [DisplayName("Preço FInal")]
-    public double? PrecoFinal {get; set;}
+    [DisplayName("Preço Final")]
+    public double? PrecoFinal { get; set; }
 
     [DisplayName("Categoria")]
-    public int? CategoriaId {get; set;}
+    public int? CategoriaId { get; set; }
 
     #endregion
+    public IEnumerable<SelectListItem> CategoriasSelect { get; set; } = new List<SelectListItem>();
 
-    public List<SelectListItem> Categorias {get; set;}
-
-    public IEnumerable<Produto> Resultado {get; set;}
-}
+    public List<Produto> Resultado { get; set; } = new();
+}   

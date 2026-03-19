@@ -37,7 +37,9 @@
             <div class="col-2">
                 <div class="form-group">
                     <label asp-for="CategoriaId"></label>
-                    <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-control">
+                    <select asp-for="CategoriaId"
+                        asp-items="Model.CategoriasSelect"
+                        class="form-control">
                         <option value="">Todas</option>
                     </select>
                 </div>
@@ -56,6 +58,7 @@
             <th>Nome</th>
             <th>Categoria</th>
             <th>Preço</th>
+            <th>Quantidade</th>
             <th>Ação</th>
         </tr>
     </thead>
@@ -68,6 +71,7 @@
             <td>@produto.Nome</td>
             <td>@produto.Categoria?.Nome</td>
             <td>@produto.Preco.ToString(format: "C")</td>
+            <td>@produto.QuantidadeEstoque</td>
             <td>
                 <a asp-action="Edit"
                    asp-route-id="@produto.ProdutoId"

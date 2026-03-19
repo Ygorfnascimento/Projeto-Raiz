@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Raiz.Enums;
 
 namespace Raiz.Models;
 
@@ -23,5 +24,34 @@ public class Produto
     [DisplayName("Preço")]
     public double Preco {get; set;}
 
+    public double QuantidadeEstoque { get; private set;}
+
     public Categoria? Categoria {get; set;}
+
+
+    public bool TemEstoque (double quantidade)
+    {
+        return QuantidadeEstoque >= quantidade;
+    }
+
+    public void AtualizarEstoque(TipoMovimentacao tipoMovimentacao, double quantidade)
+    {
+        
+        if(quantidade <= 0)
+            throw new Exception("Quantidade deve ser maior que zero");
+
+        if(tipoMovimentacao == TipoMovimentacao.Saida && !TemEstoque(quantidade))
+            throw new Exception ("Estoque insuficiente");
+
+        if(tipoMovimentacao == TipoMovimentacao.Entrada)
+        {
+            QuantidadeEstoque += quantidade;
+        }
+        else
+        {
+            QuantidadeEstoque -= quantidade;
+        }
+    }
 }
+
+        

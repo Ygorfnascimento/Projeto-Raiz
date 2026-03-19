@@ -1,0 +1,38 @@
+@using Raiz.Models;
+
+@model MovimentacaoRegister
+
+<h1>Nova Movimentação</h1>
+
+<form asp-action="Create" method="post">
+
+    <div class="form-group">
+        <label asp-for="Movimentacao.Documento"></label>
+        <input asp-for="Movimentacao.Documento" class="form-control" />
+        <span asp-validation-for="Movimentacao.Documento" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Movimentacao.TipoId"></label>
+        <select asp-for="Movimentacao.TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
+            <option value="">Selecione um tipo</option>
+        </select>
+        <span asp-validation-for="Movimentacao.TipoId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Movimentacao.DataMovimentacao"></label>
+        <input asp-for="Movimentacao.DataMovimentacao" type="date" class="form-control" />
+        <span asp-validation-for="Movimentacao.DataMovimentacao" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>     
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
