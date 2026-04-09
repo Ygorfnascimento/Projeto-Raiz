@@ -30,7 +30,11 @@ public  DateTime DataMovimentacao {get; set;}
 
 [Required]
 
+<<<<<<< HEAD
 public int StatusId {get;  private set;}
+=======
+public int StatusId {get; set;}
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 public bool PodeEditar
 {

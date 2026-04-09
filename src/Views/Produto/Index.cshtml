@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 @using Raiz.ViewModels
 
 @model ProdutoSearch
+=======
+@using Raiz.ViewModels;
+
+@model ProdutoPesquisaViewModel;
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <h1>Produtos</h1>
 
@@ -10,10 +16,17 @@
     <legend>Filtro de Pesquisa </legend>
     <form asp-action="Index" method="get">
         <div class="row">
+<<<<<<< HEAD
             <div class="col-1">
                 <div class="form-group">
                     <label asp-for="ProdutoId"></label>
                     <input asp-for="ProdutoId" type="number" step="1" min="1" class="form-control" />
+=======
+            <div class="col-2">
+                <div class="form-group">
+                    <label asp-for="CodigoBarras"></label>
+                    <input asp-for="CodigoBarras" class="form-control" />
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                 </div>
             </div>
             <div class="col-2">
@@ -38,7 +51,11 @@
                 <div class="form-group">
                     <label asp-for="CategoriaId"></label>
                     <select asp-for="CategoriaId"
+<<<<<<< HEAD
                         asp-items="Model.CategoriasSelect"
+=======
+                        asp-items="Model.Categorias"
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                         class="form-control">
                         <option value="">Todas</option>
                     </select>
@@ -46,6 +63,10 @@
             </div>
             <div class="col-2 pt-4">
                 <button type="submit" class="btn btn-primary">Pesquisar</button>
+<<<<<<< HEAD
+=======
+                <a asp-action="Index" class="btn btn-secondary">Limpar</a>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             </div>
         </div>
     </form>
@@ -54,7 +75,11 @@
 <table class="table">
     <thead>
         <tr>
+<<<<<<< HEAD
             <th>Id</th>
+=======
+            <th>Código de Barras</th>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             <th>Nome</th>
             <th>Categoria</th>
             <th>Preço</th>
@@ -64,12 +89,21 @@
     </thead>
 
     <tbody>
+<<<<<<< HEAD
     @foreach (var produto in Model.Resultado)
     {
         <tr>
             <td>@produto.ProdutoId</td>
             <td>@produto.Nome</td>
             <td>@produto.Categoria?.Nome</td>
+=======
+    @foreach (var produto in Model.Resultados)
+    {
+        <tr>
+            <td>@produto.CodigoBarras</td>
+            <td>@produto.Nome</td>
+            <td>@produto.CategoriaNome</td>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             <td>@produto.Preco.ToString(format: "C")</td>
             <td>@produto.QuantidadeEstoque</td>
             <td>

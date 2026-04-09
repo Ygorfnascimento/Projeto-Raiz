@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Raiz.Data;
 
@@ -10,9 +11,11 @@ using Raiz.Data;
 namespace Raiz.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409010804_AddCodigoBarrasProduto")]
+    partial class AddCodigoBarrasProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.18");
@@ -263,13 +266,8 @@ namespace Raiz.Data.Migrations
                     b.Property<int>("MovimentacaoId")
                         .HasColumnType("INTEGER");
 
-<<<<<<< HEAD
-                    b.Property<double>("Preco")
-                        .HasColumnType("REAL");
-=======
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(10,2)");
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("INTEGER");
@@ -295,22 +293,15 @@ namespace Raiz.Data.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("INTEGER");
 
-<<<<<<< HEAD
-                    b.Property<string>("Descricao")
-=======
                     b.Property<string>("CodigoBarras")
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-<<<<<<< HEAD
-=======
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)

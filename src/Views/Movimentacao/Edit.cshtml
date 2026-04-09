@@ -1,6 +1,7 @@
 @using Raiz.ViewModels;
 @using Raiz.Enums;
 
+<<<<<<< HEAD
 @model MovimentacaoRegister
 
 <h1>Movimentação @Model.Movimentacao.MovimentacaoId</h1>
@@ -10,10 +11,20 @@
     <div class="alert alert-danger">
         @ViewBag.Mensagem
     </div>
+=======
+@model MovimentacaoCadastroViewModel
+
+<h1>Movimentação @Model.MovimentacaoId</h1>
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erro"]</div>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 }
 
 <form asp-action="Finalize" method="post">
     <div class="row align-items-end">
+<<<<<<< HEAD
 
         <div class="col-2">
             <label asp-for="Movimentacao.MovimentacaoId"></label>
@@ -49,12 +60,30 @@
             </a>
         </div>
 
+=======
+        <div class="col-2">
+            <label asp-for="MovimentacaoId"></label>
+            <input asp-for="MovimentacaoId" class="form-control" readonly />
+        </div>
+        <div class="col-2">
+            <label asp-for="Documento"></label>
+            <input asp-for="Documento" class="form-control" readonly />
+        </div>
+        <div class="col-4">
+            <button type="submit" class="btn btn-success me-2" onclick="return confirm('Finalizar?')">Finalizar</button>
+            <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+        </div>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
     </div>
 </form>
 
 <hr />
 
+<<<<<<< HEAD
 <partial name="_AddItem" model="new MovimentacaoItem { MovimentacaoId = Model.Movimentacao.MovimentacaoId }" />
+=======
+<partial name="_AddItem" model="new MovimentacaoItemCadastroViewModel { MovimentacaoId = Model.MovimentacaoId }" />
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <table class="table mt-3">
     <thead>
@@ -66,6 +95,7 @@
         </tr>
     </thead>
     <tbody>
+<<<<<<< HEAD
         @foreach (var item in Model.Movimentacao.Itens)
         {
             <tr>
@@ -79,12 +109,31 @@
                        onclick="return confirm('Remover item?')">
                         Remover
                     </a>
+=======
+        @foreach (var item in Model.Itens)
+        {
+            <tr>
+                <td>@item.ProdutoNome</td>
+                <td>@item.Quantidade</td>
+                <td>@item.Preco.ToString("C")</td>
+                <td>
+                    <form asp-action="DeleteItem" asp-route-id="@item.MovimentacaoItemId" method="post"
+                          style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Remover?')">Remover</button>
+                    </form>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                 </td>
             </tr>
         }
     </tbody>
+<<<<<<< HEAD
 </table>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+=======
+</table>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)

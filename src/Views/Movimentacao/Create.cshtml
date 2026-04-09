@@ -1,12 +1,17 @@
 @using Raiz.Models;
 
+<<<<<<< HEAD
 @model MovimentacaoRegister
+=======
+@model MovimentacaoCadastroViewModel
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <h1>Nova Movimentação</h1>
 
 <form asp-action="Create" method="post">
 
     <div class="form-group">
+<<<<<<< HEAD
         <label asp-for="Movimentacao.Documento"></label>
         <input asp-for="Movimentacao.Documento" class="form-control" />
         <span asp-validation-for="Movimentacao.Documento" class="text-danger"></span>
@@ -24,6 +29,25 @@
         <label asp-for="Movimentacao.DataMovimentacao"></label>
         <input asp-for="Movimentacao.DataMovimentacao" type="date" class="form-control" />
         <span asp-validation-for="Movimentacao.DataMovimentacao" class="text-danger"></span>
+=======
+        <label asp-for="Documento"></label>
+        <input asp-for="Documento" class="form-control" />
+        <span asp-validation-for="Documento" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoId"></label>
+        <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
+            <option value="">Selecione um tipo</option>
+        </select>
+        <span asp-validation-for="TipoId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DataMovimentacao"></label>
+        <input asp-for="DataMovimentacao" type="date" class="form-control" />
+        <span asp-validation-for="DataMovimentacao" class="text-danger"></span>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
     </div>
 
     <br />

@@ -1,7 +1,23 @@
+<<<<<<< HEAD
 @model Categoria
 
 <h1>Editar Categoria</h1>
 
+=======
+@using Raiz.Models;
+
+@model CategoriaCadastroViewModel;
+
+<h1>Editar Categoria</h1>
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Erro"]
+    </div>
+}
+
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="CategoriaId" />
 

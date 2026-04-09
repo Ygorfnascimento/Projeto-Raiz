@@ -1,9 +1,39 @@
+<<<<<<< HEAD
 @model IEnumerable<Categoria>
+=======
+@using Raiz.Models;
+@model CategoriaPesquisaViewModel;
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <h1>Categorias</h1>
 
 <a asp-action="Create" class="btn btn-primary mb-3">Nova</a>
 
+<<<<<<< HEAD
+=======
+<fieldset class="mt-3">
+    <legend>Filtro de Pesquisa</legend>
+
+    <form asp-action="Index" method="get">
+        <div class="row">
+
+            <div class="col-10">
+                <div class="form-group">
+                    <label asp-for="Nome"></label>
+                    <input asp-for="Nome" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-2 pt-4">
+                <button type="submit" class="btn btn-primary">Procurar</button>
+                <a asp-action="Index" class="btn btn-secondary">Limpar</a>
+            </div>
+
+        </div>
+    </form>
+</fieldset>
+
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 <table class="table">
     <thead>
         <tr>
@@ -13,7 +43,11 @@
     </thead>
 
     <tbody>
+<<<<<<< HEAD
     @foreach (var categoria in Model)
+=======
+    @foreach (var categoria in Model.Resultados)
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
     {
         <tr>
             <td>@categoria.Nome</td>
@@ -29,4 +63,8 @@
         </tr>
     }
     </tbody>
+<<<<<<< HEAD
 </table>
+=======
+</table>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)

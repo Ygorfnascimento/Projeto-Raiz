@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 @model ProdutoRegister
+=======
+@using Raiz.Models;
+
+@model ProdutoCadastroViewModel;
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <h1>Novo Produto</h1>
 
 <form asp-action="Create" method="post">
     <div class="form-group">
+<<<<<<< HEAD
         <label asp-for="Produto.Nome"></label>
         <input asp-for="Produto.Nome" class="form-control" />
         <span asp-validation-for="Produto.Nome" class="text-danger"></span>
@@ -29,6 +36,36 @@
             <option value="">Selecione uma categoria</option>
         </select>
         <span asp-validation-for="Produto.CategoriaId" class="text-danger"></span>
+=======
+        <label asp-for="CodigoBarras"></label>
+        <input asp-for="CodigoBarras" class="form-control" />
+        <span asp-validation-for="CodigoBarras" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Nome"></label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Descricao"></label>
+        <input asp-for="Descricao" class="form-control" />
+        <span asp-validation-for="Descricao" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Preco"></label>
+        <input asp-for="Preco" type="number" step="0.01" min="0" class="form-control" />
+        <span asp-validation-for="Preco" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoriaId"></label>
+        <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-control">
+            <option value="">Selecione uma categoria</option>
+        </select>
+        <span asp-validation-for="CategoriaId" class="text-danger"></span>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
     </div>
 
     <br />
@@ -38,5 +75,11 @@
 </form>
 
 @section Scripts {
+<<<<<<< HEAD
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+=======
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 }

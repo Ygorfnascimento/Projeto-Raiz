@@ -1,5 +1,11 @@
 @using Raiz.Models
+<<<<<<< HEAD
 @model MovimentacaoItem
+=======
+@using Raiz.Enums
+
+@model MovimentacaoItemCadastroViewModel
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
 <form asp-action="AddItem" method="post">
     @Html.AntiForgeryToken()
@@ -8,9 +14,15 @@
     <div class="row">
         <div class="col-3">
             <div class="form-group">
+<<<<<<< HEAD
                 <label asp-for="ProdutoId"></label>
                 <input asp-for="ProdutoId" class="form-control" tabindex="1" autofocus />
                 <span asp-validation-for="ProdutoId" class="text-danger"></span>
+=======
+                <label asp-for="CodigoBarras"></label>
+                <input asp-for="CodigoBarras" class="form-control" tabindex="1" autofocus />
+                <span asp-validation-for="CodigoBarras" class="text-danger"></span>
+>>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             </div>
         </div>
 
