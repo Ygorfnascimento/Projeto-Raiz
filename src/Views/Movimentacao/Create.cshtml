@@ -1,61 +1,71 @@
 @using Raiz.Models;
-
-<<<<<<< HEAD
-@model MovimentacaoRegister
-=======
 @model MovimentacaoCadastroViewModel
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
-<h1>Nova Movimentação</h1>
+<h1 class="mt-4">Nova Movimentação</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item">Movimentação</li>
+    <li class="breadcrumb-item active">Nova</li>
+</ol>
 
-<form asp-action="Create" method="post">
-
-    <div class="form-group">
-<<<<<<< HEAD
-        <label asp-for="Movimentacao.Documento"></label>
-        <input asp-for="Movimentacao.Documento" class="form-control" />
-        <span asp-validation-for="Movimentacao.Documento" class="text-danger"></span>
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-1"></i> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+}
 
-    <div class="form-group">
-        <label asp-for="Movimentacao.TipoId"></label>
-        <select asp-for="Movimentacao.TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
-            <option value="">Selecione um tipo</option>
-        </select>
-        <span asp-validation-for="Movimentacao.TipoId" class="text-danger"></span>
+<div class="card mb-4 shadow-sm">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-exchange-alt me-1"></i> Informações do Cabeçalho
+        </h6>
     </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row g-3">
+                
+                <div class="col-md-4">
+                    <label asp-for="Documento" class="form-label small font-weight-bold">Número do Documento</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-file-invoice"></i></span>
+                        <input asp-for="Documento" class="form-control" placeholder="Ex: NF-12345" autofocus />
+                    </div>
+                    <span asp-validation-for="Documento" class="text-danger small"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Movimentacao.DataMovimentacao"></label>
-        <input asp-for="Movimentacao.DataMovimentacao" type="date" class="form-control" />
-        <span asp-validation-for="Movimentacao.DataMovimentacao" class="text-danger"></span>
-=======
-        <label asp-for="Documento"></label>
-        <input asp-for="Documento" class="form-control" />
-        <span asp-validation-for="Documento" class="text-danger"></span>
+                <div class="col-md-4">
+                    <label asp-for="TipoId" class="form-label small font-weight-bold">Tipo de Operação</label>
+                    <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-select">
+                        <option value="">Selecione Entrada ou Saída...</option>
+                    </select>
+                    <span asp-validation-for="TipoId" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="DataMovimentacao" class="form-label small font-weight-bold">Data da Movimentação</label>
+                    <input asp-for="DataMovimentacao" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="DataMovimentacao" class="text-danger small"></span>
+                </div>
+
+            </div>
+
+            <div class="mt-4 border-top pt-3 text-end">
+                <a asp-action="Index" class="btn btn-secondary me-1">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+                <button type="submit" class="btn btn-primary shadow-sm">
+                    <i class="fas fa-save me-1"></i> Iniciar Movimentação
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="TipoId"></label>
-        <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
-            <option value="">Selecione um tipo</option>
-        </select>
-        <span asp-validation-for="TipoId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="DataMovimentacao"></label>
-        <input asp-for="DataMovimentacao" type="date" class="form-control" />
-        <span asp-validation-for="DataMovimentacao" class="text-danger"></span>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-    </div>
-
-    <br />
-
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>     
-
-</form>
+<div class="alert alert-info border-0 shadow-sm small fade show" role="alert">
+    <i class="fas fa-lightbulb me-1 text-warning"></i>
+    <strong>Próximo passo:</strong> Ao salvar, você irá para a tela de gerenciamento de itens para bipar os produtos.
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

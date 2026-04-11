@@ -1,85 +1,87 @@
-<<<<<<< HEAD
-@model ProdutoRegister
-=======
 @using Raiz.Models;
-
 @model ProdutoCadastroViewModel;
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
-<h1>Novo Produto</h1>
+<h1 class="mt-4">Novo Produto</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item">Cadastro</li>
+    <li class="breadcrumb-item"><a asp-action="Index">Produtos</a></li>
+    <li class="breadcrumb-item active">Novo</li>
+</ol>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-<<<<<<< HEAD
-        <label asp-for="Produto.Nome"></label>
-        <input asp-for="Produto.Nome" class="form-control" />
-        <span asp-validation-for="Produto.Nome" class="text-danger"></span>
+<div class="card mb-4 shadow-sm border-left-success">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-box-open me-1"></i> Informações do Produto
+        </h6>
     </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row g-3">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="CodigoBarras" class="form-label small font-weight-bold">Código de Barras</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-barcode"></i></span>
+                        <input asp-for="CodigoBarras" class="form-control" placeholder="Bipe ou digite o código..." autofocus />
+                    </div>
+                    <span asp-validation-for="CodigoBarras" class="text-danger small"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Produto.Descricao"></label>
-        <input asp-for="Produto.Descricao" class="form-control" />
-        <span asp-validation-for="Produto.Descricao" class="text-danger"></span>
+                <div class="col-md-8 mb-3">
+                    <label asp-for="Nome" class="form-label small font-weight-bold">Nome do Produto</label>
+                    <input asp-for="Nome" class="form-control" placeholder="Ex: Arroz Integral 1kg" />
+                    <span asp-validation-for="Nome" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Descricao" class="form-label small font-weight-bold">Descrição Detalhada</label>
+                    <textarea asp-for="Descricao" class="form-control" rows="2" placeholder="Informações adicionais do produto..."></textarea>
+                    <span asp-validation-for="Descricao" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Preco" class="form-label small font-weight-bold">Preço de Venda Sugerido</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">R$</span>
+                        <input asp-for="Preco" type="number" step="0.01" min="0" class="form-control" placeholder="0,00" />
+                    </div>
+                    <span asp-validation-for="Preco" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CategoriaId" class="form-label small font-weight-bold">Categoria / Departamento</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-tags"></i></span>
+                        <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-select">
+                            <option value="">Selecione uma categoria...</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="CategoriaId" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mt-4 border-top pt-3 d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-secondary me-2 shadow-sm">
+                    <i class="fas fa-times me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-success shadow-sm">
+                    <i class="fas fa-save me-1"></i> Salvar Produto
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="Produto.Preco"></label>
-        <input asp-for="Produto.Preco" type="number" step="0.01" min="0" class="form-control" />
-        <span asp-validation-for="Produto.Preco" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Produto.CategoriaId"></label>
-        <select asp-for="Produto.CategoriaId"
-                asp-items="Model.Categorias"
-                class="form-control">
-            <option value="">Selecione uma categoria</option>
-        </select>
-        <span asp-validation-for="Produto.CategoriaId" class="text-danger"></span>
-=======
-        <label asp-for="CodigoBarras"></label>
-        <input asp-for="CodigoBarras" class="form-control" />
-        <span asp-validation-for="CodigoBarras" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Nome"></label>
-        <input asp-for="Nome" class="form-control" />
-        <span asp-validation-for="Nome" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Descricao"></label>
-        <input asp-for="Descricao" class="form-control" />
-        <span asp-validation-for="Descricao" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Preco"></label>
-        <input asp-for="Preco" type="number" step="0.01" min="0" class="form-control" />
-        <span asp-validation-for="Preco" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="CategoriaId"></label>
-        <select asp-for="CategoriaId" asp-items="Model.Categorias" class="form-control">
-            <option value="">Selecione uma categoria</option>
-        </select>
-        <span asp-validation-for="CategoriaId" class="text-danger"></span>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-    </div>
-
-    <br />
-
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-</form>
+<div class="alert alert-light border shadow-sm small">
+    <i class="fas fa-info-circle me-1 text-primary"></i>
+    <strong>Importante:</strong> O estoque inicial de um novo produto é sempre zero. Para adicionar unidades, realize uma <strong>Movimentação de Entrada</strong> após o cadastro.
+</div>
 
 @section Scripts {
-<<<<<<< HEAD
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-=======
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 }

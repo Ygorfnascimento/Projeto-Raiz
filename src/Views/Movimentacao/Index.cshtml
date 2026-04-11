@@ -2,119 +2,162 @@
 @using Raiz.Models;
 @using Raiz.ViewModels;
 
-<<<<<<< HEAD
-@model MovimentacaoSearch
-=======
 @model MovimentacaoPesquisaViewModel
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
-<h1>Movimentações</h1>
+<h1 class="mt-4">Movimentação</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li class="breadcrumb-item active">Movimentação</li>
+</ol>
 
-<a asp-action="Create" class="btn btn-primary">Nova</a>
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-1"></i> @TempData["Mensagem"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-<fieldset>
-    <legend>Filtro de Pesquisa</legend>
+<div class="card mb-4 shadow-sm border-left-primary">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-filter me-1"></i> Filtro de Pesquisa
+        </h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-1">
+                    <label asp-for="MovimentacaoId" class="form-label small font-weight-bold">Id</label>
+                    <input asp-for="MovimentacaoId" class="form-control" placeholder="ID" />
+                </div>
 
-    <form asp-action="Index" method="get">
-        <div class="row">
+                <div class="col-md-2">
+                    <label asp-for="Documento" class="form-label small font-weight-bold">Documento</label>
+                    <input asp-for="Documento" class="form-control" placeholder="Nº Documento" />
+                </div>
 
-            <div class="col-2">
-                <label asp-for="MovimentacaoId"></label>
-                <input asp-for="MovimentacaoId" class="form-control" />
+                <div class="col-md-2">
+                    <label asp-for="DataMovimentacaoInicial" class="form-label small font-weight-bold">De:</label>
+                    <input asp-for="DataMovimentacaoInicial" type="date" class="form-control" />
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="DataMovimentacaoFinal" class="form-label small font-weight-bold">Até:</label>
+                    <input asp-for="DataMovimentacaoFinal" type="date" class="form-control" />
+                </div>
+
+                <div class="col-md-2">
+                    <label asp-for="TipoId" class="form-label small font-weight-bold">Tipo</label>
+                    <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-select">
+                        <option value="">Todos</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2 shadow-sm">
+                        <i class="fas fa-search me-1"></i> Filtrar
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary me-2 shadow-sm">Limpar</a>
+                    <a asp-action="Create" class="btn btn-success shadow-sm">
+                        <i class="fas fa-plus me-1"></i> Nova
+                    </a>
+                </div>
             </div>
+        </form>
+    </div>
+</div>
 
-            <div class="col-2">
-                <label asp-for="Documento"></label>
-                <input asp-for="Documento" class="form-control" />
-            </div>
+<div class="card mb-4 shadow-sm">
+    <div class="card-header py-3 bg-light">
+        <h6 class="m-0 font-weight-bold text-secondary text-uppercase small">
+            <i class="fas fa-history me-1"></i> Histórico de Registros
+        </h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4" style="width: 5%">Id</th>
+                        <th style="width: 20%">Documento</th>
+                        <th style="width: 15%">Tipo</th>
+                        <th style="width: 15%">Data</th>
+                        <th style="width: 15%">Status</th>
+                        <th class="text-center pe-4" style="width: 20%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Resultado != null && Model.Resultado.Any())
+                    {
+                        foreach (var movimentacao in Model.Resultado)
+                        {
+                            <tr>
+                                <td class="ps-4 text-muted small">@movimentacao.MovimentacaoId</td>
+                                <td class="font-weight-bold text-dark">@movimentacao.Documento</td>
+                                <td>
+                                    @{
+                                        var badgeTipo = movimentacao.TipoId == 1 ? "bg-primary" : "bg-info text-dark";
+                                    }
+                                    <span class="badge @badgeTipo shadow-sm">
+                                        <i class="fas @(movimentacao.TipoId == 1 ? "fa-arrow-down" : "fa-arrow-up") me-1"></i>
+                                        @((TipoMovimentacao)movimentacao.TipoId)
+                                    </span>
+                                </td>
+                                <td>@movimentacao.DataMovimentacao.ToShortDateString()</td>
+                                <td>
+                                    @if (movimentacao.StatusId == 2) 
+                                    {
+                                        <span class="badge bg-success shadow-sm">
+                                            <i class="fas fa-check-circle me-1"></i> Finalizado
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark shadow-sm">
+                                            <i class="fas fa-spinner fa-spin-hover me-1"></i> Em Aberto
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a asp-action="Detail" asp-route-id="@movimentacao.MovimentacaoId" 
+                                           class="btn btn-info btn-sm text-white shadow-sm" title="Visualizar Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
 
-            <div class="col-2">
-                <label asp-for="DataMovimentacaoInicial"></label>
-                <input asp-for="DataMovimentacaoInicial" type="date" class="form-control" />
-            </div>
+                                        @if (movimentacao.StatusId != 2)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@movimentacao.MovimentacaoId" 
+                                               class="btn btn-warning btn-sm text-white shadow-sm" title="Editar / Adicionar Itens">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        }
 
-            <div class="col-2">
-                <label asp-for="DataMovimentacaoFinal"></label>
-                <input asp-for="DataMovimentacaoFinal" type="date" class="form-control" />
-            </div>
-
-            <div class="col-2">
-                <label asp-for="TipoId"></label>
-                <select asp-for="TipoId" asp-items="Model.TiposMovimentacoes" class="form-control">
-                    <option value="">Todos</option>
-                </select>
-            </div>
-
-            <div class="col-2">
-                <label asp-for="StatusId"></label>
-                <select asp-for="StatusId" asp-items="Model.Status" class="form-control">
-                    <option value="">Todos</option>
-                </select>
-            </div>
-
-            <div class="col-2 pt-4">
-                <button type="submit" class="btn btn-primary">Pesquisar</button>
-<<<<<<< HEAD
-=======
-                <a asp-action="Index" class="btn btn-secondary">Limpar</a>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-            </div>
-
+                                        <form asp-action="Delete" method="post" style="display:inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@movimentacao.MovimentacaoId" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm border-0" 
+                                                    title="Excluir Registro" onclick="return confirm('ATENÇÃO: Deseja realmente excluir esta movimentação? Isso não pode ser desfeito.')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <i class="fas fa-search fa-2x mb-3 d-block text-muted opacity-50"></i>
+                                <span class="text-muted">Nenhuma movimentação encontrada para o filtro aplicado.</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    </form>
-</fieldset>
-
-<table class="table mt-3">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Documento</th>
-            <th>Tipo</th>
-            <th>Data</th>
-            <th>Status</th>
-            <th>Ação</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    @if (Model.Resultado != null && Model.Resultado.Any())
-    {
-        foreach (var movimentacao in Model.Resultado)
-        {
-            <tr>
-                <td>@movimentacao.MovimentacaoId</td>
-                <td>@movimentacao.Documento</td>
-                <td>@((TipoMovimentacao)movimentacao.TipoId)</td>
-                <td>@movimentacao.DataMovimentacao.ToShortDateString()</td>
-                <td>@Enum.GetName(typeof(Status), movimentacao.StatusId)</td>
-                <td>
-
-                    <a asp-action="Detail" asp-route-id="@movimentacao.MovimentacaoId" class="btn btn-info">
-                        Detalhar
-                    </a>
-
-                    <a asp-action="Edit" asp-route-id="@movimentacao.MovimentacaoId" class="btn btn-warning">
-                        Editar
-                    </a>
-
-                    <form asp-action="Delete" method="post" style="display:inline">
-                        <input type="hidden" name="id" value="@movimentacao.MovimentacaoId" />
-                        <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Tem certeza que deseja remover?')">
-                            Remover
-                        </button>
-                    </form>
-
-                </td>
-            </tr>
-        }
-    }
-    else
-    {
-        <tr>
-            <td colspan="6">Nenhum resultado encontrado</td>
-        </tr>
-    }
-
-    </tbody>
-</table>
+    </div>
+</div>

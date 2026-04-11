@@ -1,32 +1,54 @@
-<<<<<<< HEAD
-@model Categoria
-
-<h1>Excluir Categoria</h1>
-
-=======
 @using Raiz.Models;
 @model CategoriaCadastroViewModel;
 
-<h1>Excluir Categoria</h1>
+<h1 class="mt-4">Excluir Categoria</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item">Cadastro</li>
+    <li class="breadcrumb-item">Categoria</li>
+    <li class="breadcrumb-item active">Excluir</li>
+</ol>
 
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-1"></i> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-<p>Deseja realmente excluir a categoria <strong>@Model.Nome</strong>?</p>
+<div class="card border-left-danger shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-danger">
+            <i class="fas fa-exclamation-triangle me-1"></i> Atenção: Confirmação de Exclusão
+        </h6>
+    </div>
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="CategoriaId" />
-<<<<<<< HEAD
-=======
-    <input type="hidden" asp-for="Nome" />
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+        <p class="mb-4">
+            Você está prestes a remover permanentemente a categoria: 
+            <br />
+            <strong class="text-dark" style="font-size: 1.2rem;">@Model.Nome</strong>
+        </p>
 
-    <br />
+        <div class="alert alert-warning border-0 small">
+            <i class="fas fa-info-circle me-1"></i> 
+            <strong>Aviso:</strong> Certifique-se de que não existam produtos vinculados a esta categoria antes de confirmar, caso contrário, a exclusão poderá ser impedida pelo banco de dados.
+        </div>
 
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-<<<<<<< HEAD
-</form>
-=======
-</form>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+        <form asp-action="Delete" method="post">
+            @* Campos ocultos para persistência *@
+            <input type="hidden" asp-for="CategoriaId" />
+            <input type="hidden" asp-for="Nome" />
+
+            <div class="mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt me-1"></i> Confirmar Exclusão
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

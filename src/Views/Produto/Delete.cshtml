@@ -1,22 +1,57 @@
-<<<<<<< HEAD
-@model Produto
-=======
 @using Raiz.Models;
-
 @model ProdutoCadastroViewModel;
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
-<h1>Excluir Produto</h1>
+<h1 class="mt-4">Excluir Produto</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item">Cadastro</li>
+    <li class="breadcrumb-item"><a asp-action="Index">Produtos</a></li>
+    <li class="breadcrumb-item active">Excluir</li>
+</ol>
 
-<p>Deseja realmente excluir esse produto? </p>
-    
-<strong>@Model.Nome</strong>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-left-danger shadow mb-4">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 font-weight-bold text-danger text-uppercase small">
+                    <i class="fas fa-exclamation-triangle me-1"></i> Atenção: Ação Irreversível
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-box-open fa-3x text-gray-300 mb-3"></i>
+                    <p class="mb-1 text-muted">Você está prestes a excluir o produto:</p>
+                    <h3 class="font-weight-bold text-dark">@Model.Nome</h3>
+                    <span class="badge bg-light text-dark border">Cód: @Model.CodigoBarras</span>
+                </div>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="ProdutoId" />
+                <div class="alert alert-warning border-0 shadow-sm mb-4">
+                    <div class="d-flex">
+                        <i class="fas fa-info-circle fa-2x me-3"></i>
+                        <div>
+                            <strong>Atenção aos vínculos!</strong><br />
+                            Se este produto possuir registros de movimentação no banco de dados, a exclusão poderá ser impedida pelo sistema para manter a integridade dos dados.
+                        </div>
+                    </div>
+                </div>
 
-    <br /> <br />
+                <form asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ProdutoId" />
+                    
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <a asp-action="Index" class="btn btn-secondary px-4 shadow-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Não, Voltar
+                        </a>
+                        <button type="submit" class="btn btn-danger px-4 shadow-sm">
+                            <i class="fas fa-trash-alt me-1"></i> Sim, Confirmar Exclusão
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <button type="submit" class="btn btn-danger">Excluir</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="text-center">
+    <small class="text-muted">ID do Registro: #@Model.ProdutoId</small>
+</div>

@@ -1,34 +1,51 @@
-<<<<<<< HEAD
-@model Categoria
-
-<h1>Editar Categoria</h1>
-
-=======
 @using Raiz.Models;
-
 @model CategoriaCadastroViewModel;
 
-<h1>Editar Categoria</h1>
+<h1 class="mt-4">Editar Categoria</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item">Cadastro</li>
+    <li class="breadcrumb-item">Categoria</li>
+    <li class="breadcrumb-item active">Edição</li>
+</ol>
 
 @if (TempData["Erro"] != null)
 {
-    <div class="alert alert-danger">
-        @TempData["Erro"]
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-1"></i> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="CategoriaId" />
-
-    <div class="form-group">
-        <label asp-for="Nome"></label>
-        <input asp-for="Nome" class="form-control" />
-        <span asp-validation-for="Nome" class="text-danger"></span>
+<div class="card mb-4 shadow-sm">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-edit me-1"></i> Alterar Dados da Categoria
+        </h6>
     </div>
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="CategoriaId" />
 
-    <br />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Nome" class="form-label small font-weight-bold">Nome da Categoria</label>
+                    <input asp-for="Nome" class="form-control" placeholder="Ex: Higiene, Congelados..." />
+                    <span asp-validation-for="Nome" class="text-danger small"></span>
+                </div>
+            </div>
 
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
-</form>
+            <div class="mt-3 border-top pt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Salvar Alterações
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

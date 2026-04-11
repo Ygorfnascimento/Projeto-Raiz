@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Raiz.Data;
 using Raiz.Models;
-<<<<<<< HEAD
-=======
-using Raiz.ViewModels;
-using Microsoft.EntityFrameworkCore;
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+using Raiz.ViewModels; 
 
 namespace Raiz.Controllers;
 
@@ -18,44 +15,28 @@ public class CategoriaController : Controller
         _context = context;
     }
 
-<<<<<<< HEAD
-    public IActionResult Index()
-    {
-        var categorias = _context.Categorias.ToList();
-        return View(categorias);
-    }
-
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(Categoria categoria)
-    {
-        if (ModelState.IsValid)
-        {
-=======
     public IActionResult Index([FromQuery] CategoriaPesquisaViewModel model)
     {
         var query = _context.Categorias.AsNoTracking();
 
         if (!string.IsNullOrEmpty(model.Nome))
         {
-            query = query.Where(x => x.Nome.ToUpper().Contains(model.Nome.ToUpper()));
+            query = query.Where(x => x.Nome.Contains(model.Nome));
         }
 
-        model.Resultados = query.Select(x => new CategoriaCadastroViewModel
+        model.Resultados = query.Select(c => new CategoriaCadastroViewModel
         {
-            CategoriaId = x.CategoriaId,
-            Nome = x.Nome
+            CategoriaId = c.CategoriaId,
+            Nome = c.Nome ?? ""
         }).ToList();
 
         return View(model);
     }
 
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        return View(new CategoriaCadastroViewModel());
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -63,47 +44,37 @@ public class CategoriaController : Controller
     {
         if (ModelState.IsValid)
         {
-            var categoria = new Categoria { Nome = model.Nome };
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+            var categoria = new Categoria
+            {
+                Nome = model.Nome
+            };
+
             _context.Categorias.Add(categoria);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-<<<<<<< HEAD
 
-        return View(categoria);
-=======
         return View(model);
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
     }
 
     public IActionResult Edit(int id)
     {
         var categoria = _context.Categorias.Find(id);
-<<<<<<< HEAD
 
         if (categoria == null)
             return NotFound();
 
-        return View(categoria);
-=======
-        if (categoria == null) return NotFound();
+        var model = new CategoriaCadastroViewModel
+        {
+            CategoriaId = categoria.CategoriaId,
+            Nome = categoria.Nome ?? ""
+        };
 
-        return View(new CategoriaCadastroViewModel { 
-            CategoriaId = categoria.CategoriaId, 
-            Nome = categoria.Nome 
-        });
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-<<<<<<< HEAD
-    public IActionResult Edit(Categoria categoria)
-    {
-        if (ModelState.IsValid)
-        {
-=======
     public IActionResult Edit(CategoriaCadastroViewModel model)
     {
         if (ModelState.IsValid)
@@ -112,14 +83,13 @@ public class CategoriaController : Controller
             if (categoria == null) return NotFound();
 
             categoria.Nome = model.Nome;
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+
             _context.Categorias.Update(categoria);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-<<<<<<< HEAD
 
-        return View(categoria);
+        return View(model);
     }
     
     public IActionResult Delete(int id)
@@ -129,55 +99,35 @@ public class CategoriaController : Controller
         if (categoria == null)
             return NotFound();
 
-        return View(categoria);
-    }
+        var model = new CategoriaCadastroViewModel
+        {
+            CategoriaId = categoria.CategoriaId,
+            Nome = categoria.Nome ?? ""
+        };
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [ActionName("Delete")]
-    public IActionResult DeleteConfirmed(int id)
-    {
-        var categoria = _context.Categorias.Find(id);
-
-        if (categoria == null)
-            return NotFound();
-=======
         return View(model);
     }
 
-    [HttpGet]
-    public IActionResult Delete(int id)
-    {
-        var categoria = _context.Categorias.Find(id);
-        if (categoria == null) return NotFound();
-
-        return View(new CategoriaCadastroViewModel { 
-            CategoriaId = categoria.CategoriaId, 
-            Nome = categoria.Nome 
-        });
-    }
-
-    [HttpPost, ActionName("Delete")] 
+    
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
+    [ActionName("Delete")]
+    public IActionResult DeleteConfirmed(int CategoriaId) 
     {
-        var categoria = _context.Categorias.Find(id);
-        if (categoria == null) return NotFound();
+        var categoria = _context.Categorias.Find(CategoriaId);
 
-        var temProdutos = _context.Produtos.Any(p => p.CategoriaId == id);
+        if (categoria == null)
+            return NotFound();
+            
+        bool temProdutos = _context.Produtos.Any(p => p.CategoriaId == CategoriaId);
         if (temProdutos)
         {
-            TempData["Erro"] = "Não é possível excluir: existem produtos vinculados a esta categoria.";
+            TempData["Erro"] = "Não é possível excluir esta categoria porque existem produtos vinculados a ela.";
             return RedirectToAction(nameof(Index));
         }
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
 
         _context.Categorias.Remove(categoria);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)

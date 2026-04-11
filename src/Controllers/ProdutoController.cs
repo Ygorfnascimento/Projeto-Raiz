@@ -16,43 +16,13 @@ namespace Raiz.Controllers
             _context = context;
         }
 
-<<<<<<< HEAD
-        public IActionResult Index([FromQuery] ProdutoSearch model)
-        {
-            var query  = _context.Produtos
-                .Include(p => p.Categoria)
-                .AsNoTracking();
-
-            if(model.ProdutoId.HasValue && model.ProdutoId > 0)
-                query = query.Where(p => p.ProdutoId == model.ProdutoId);
-
-            if(!string.IsNullOrEmpty(model.Nome))
-                query = query.Where(x => x.Nome.ToUpper().Contains(model.Nome.ToUpper()));
-
-            if(model.CategoriaId.HasValue && model.CategoriaId > 0)
-                query = query.Where(x => x.CategoriaId == model.CategoriaId);
-
-            if(model.PrecoInicial.HasValue && model.PrecoInicial > 0)
-                query = query.Where(x => x.Preco >= model.PrecoInicial);
-
-            if(model.PrecoFinal.HasValue && model.PrecoFinal > 0)
-                query = query.Where(x => x.Preco <= model.PrecoFinal);
-
-             // model.Resultado = _context.Produtos
-             //   .Include(p => p.Categoria)
-             //   .ToList();
-
-            model.Resultado = query.ToList();
-
-            model.CategoriasSelect = LoadDropdownlistCategorias();
-
-            return View(nameof(Index), model);
-=======
+        // LISTAGEM COM FILTROS
         [HttpGet]
         public IActionResult Index([FromQuery] ProdutoPesquisaViewModel model)
         {
             var query = _context.Produtos.Include(p => p.Categoria).AsNoTracking();
 
+            // Filtros
             if (!string.IsNullOrEmpty(model.CodigoBarras))
             {
                 query = query.Where(x => x.CodigoBarras == model.CodigoBarras);
@@ -65,12 +35,12 @@ namespace Raiz.Controllers
 
             if (model.PrecoInicial.HasValue)
             {
-                query = query.Where(x => x.Preco >= (decimal)model.PrecoInicial.Value);
+                query = query.Where(x => x.Preco >= model.PrecoInicial.Value);
             }
 
             if (model.PrecoFinal.HasValue)
             {
-                query = query.Where(x => x.Preco <= (decimal)model.PrecoFinal.Value);
+                query = query.Where(x => x.Preco <= model.PrecoFinal.Value);
             }
 
             if (model.CategoriaId.HasValue && model.CategoriaId > 0)
@@ -78,12 +48,13 @@ namespace Raiz.Controllers
                 query = query.Where(x => x.CategoriaId == model.CategoriaId.Value);
             }
 
+            // Mapeamento para a ViewModel de resultados
             model.Resultados = query.Select(p => new ProdutoCadastroViewModel 
             { 
                 ProdutoId = p.ProdutoId,
                 Nome = p.Nome,
                 CodigoBarras = p.CodigoBarras,
-                Preco = (decimal)p.Preco,
+                Preco = p.Preco,
                 QuantidadeEstoque = p.QuantidadeEstoque,
                 CategoriaId = p.CategoriaId,
                 CategoriaNome = p.Categoria != null ? p.Categoria.Nome : "Sem Categoria"
@@ -92,37 +63,21 @@ namespace Raiz.Controllers
             model.Categorias = ObterListaCategorias();
 
             return View(model);
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
         }
 
+        // CADASTRO (GET)
         public IActionResult Create()
         {
-<<<<<<< HEAD
-            var model = new ProdutoRegister();
-            model.Categorias = LoadDropdownlistCategorias();
-=======
             var model = new ProdutoCadastroViewModel
             {
                 Categorias = ObterListaCategorias()
             };
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             return View(model);
         }
 
+        // CADASTRO (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-<<<<<<< HEAD
-        public IActionResult Create(ProdutoRegister model)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Produtos.Add(model.Produto);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-
-            model.Categorias = LoadDropdownlistCategorias();
-=======
         public IActionResult Create(ProdutoCadastroViewModel model)
         {
             if (ModelState.IsValid)
@@ -133,8 +88,8 @@ namespace Raiz.Controllers
                     Nome = model.Nome,
                     Descricao = model.Descricao,
                     CategoriaId = model.CategoriaId,
-                    Preco = (decimal)model.Preco,
-                    QuantidadeEstoque = (int)model.QuantidadeEstoque
+                    Preco = model.Preco,
+                    QuantidadeEstoque = model.QuantidadeEstoque
                 };
 
                 _context.Produtos.Add(produto);
@@ -144,25 +99,13 @@ namespace Raiz.Controllers
             }
 
             model.Categorias = ObterListaCategorias();
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             return View(model);
         }
 
+        // EDIÇÃO (GET)
         public IActionResult Edit(int id)
         {
             var produto = _context.Produtos.Find(id);
-<<<<<<< HEAD
-
-            if (produto == null)
-            {
-                return NotFound();
-            }
-
-            var model = new ProdutoRegister
-            {
-                Produto = produto,
-                Categorias = LoadDropdownlistCategorias()
-=======
             if (produto == null) return NotFound();
 
             var model = new ProdutoCadastroViewModel
@@ -172,41 +115,19 @@ namespace Raiz.Controllers
                 Nome = produto.Nome,
                 Descricao = produto.Descricao,
                 CategoriaId = produto.CategoriaId,
-                Preco = (decimal)produto.Preco,
+                Preco = produto.Preco,
                 QuantidadeEstoque = produto.QuantidadeEstoque,
                 Categorias = ObterListaCategorias()
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             };
 
             return View(model);
         }
 
+        // EDIÇÃO (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-<<<<<<< HEAD
-        public IActionResult Edit(Produto produto)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Produtos.Update(produto);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-
-            var model = new ProdutoRegister
-            {
-                Produto = produto,
-                Categorias = LoadDropdownlistCategorias()
-            };
-
-=======
         public IActionResult Edit(ProdutoCadastroViewModel model)
         {
-            if (model.CategoriaId <= 0)
-            {
-                ModelState.AddModelError("CategoriaId", "Selecione uma categoria válida.");
-            }
-
             if (ModelState.IsValid)
             {
                 var produto = _context.Produtos.Find(model.ProdutoId);
@@ -216,8 +137,8 @@ namespace Raiz.Controllers
                 produto.Nome = model.Nome;
                 produto.Descricao = model.Descricao;
                 produto.CategoriaId = model.CategoriaId;
-                produto.Preco = (decimal)model.Preco;
-                produto.QuantidadeEstoque = (int)model.QuantidadeEstoque;
+                produto.Preco = model.Preco;
+                produto.QuantidadeEstoque = model.QuantidadeEstoque;
 
                 _context.Produtos.Update(produto);
                 _context.SaveChanges();
@@ -226,28 +147,12 @@ namespace Raiz.Controllers
             }
 
             model.Categorias = ObterListaCategorias();
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             return View(model);
         }
 
+        // EXCLUSÃO (GET)
         public IActionResult Delete(int id)
         {
-<<<<<<< HEAD
-            var produto = _context.Produtos.Find(id);
-
-            if (produto == null)
-            {
-                return NotFound();
-            }
-
-            return View(produto);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(Produto produto)
-        {
-=======
             var produto = _context.Produtos.Include(p => p.Categoria).FirstOrDefault(p => p.ProdutoId == id);
             if (produto == null) return NotFound();
 
@@ -258,46 +163,40 @@ namespace Raiz.Controllers
                 Descricao = produto.Descricao,
                 CodigoBarras = produto.CodigoBarras,
                 CategoriaId = produto.CategoriaId,
-                Preco = (decimal)produto.Preco,
+                Preco = produto.Preco,
                 QuantidadeEstoque = produto.QuantidadeEstoque
             };
 
             return View(model);
         }
 
+        // EXCLUSÃO (POST) - AQUI ESTAVA O ERRO
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int ProdutoId) 
         {
+            // Buscamos pelo ID que vem do campo hidden do formulário
             var produto = _context.Produtos.Find(ProdutoId);
+            
             if (produto == null) return NotFound();
 
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
 
-<<<<<<< HEAD
-        private List<SelectListItem> LoadDropdownlistCategorias()
-        {
-            return _context.Categorias
-=======
+        // MÉTODO AUXILIAR PARA SELECT DE CATEGORIAS
         private List<SelectListItem> ObterListaCategorias()
         {
             return _context.Categorias
                 .AsNoTracking() 
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                 .Select(x => new SelectListItem
                 {
                     Value = x.CategoriaId.ToString(),
                     Text = x.Nome
                 })
-<<<<<<< HEAD
-=======
                 .OrderBy(x => x.Text)
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
                 .ToList();
         }
     }

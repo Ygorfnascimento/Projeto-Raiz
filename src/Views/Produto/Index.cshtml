@@ -1,121 +1,120 @@
-<<<<<<< HEAD
 @using Raiz.ViewModels
+@model ProdutoPesquisaViewModel
 
-@model ProdutoSearch
-=======
-@using Raiz.ViewModels;
+<h1 class="mt-4">Produtos</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li class="breadcrumb-item active">Produtos</li>
+</ol>
 
-@model ProdutoPesquisaViewModel;
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i> @TempData["Sucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-<h1>Produtos</h1>
-
-<a asp-action="Create" class="btn btn-primary">Novo</a>
-
-<fieldset class="mt-3">
-    <legend>Filtro de Pesquisa </legend>
-    <form asp-action="Index" method="get">
-        <div class="row">
-<<<<<<< HEAD
-            <div class="col-1">
-                <div class="form-group">
-                    <label asp-for="ProdutoId"></label>
-                    <input asp-for="ProdutoId" type="number" step="1" min="1" class="form-control" />
-=======
-            <div class="col-2">
-                <div class="form-group">
-                    <label asp-for="CodigoBarras"></label>
-                    <input asp-for="CodigoBarras" class="form-control" />
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
+<div class="card mb-4 shadow-sm border-left-primary">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <i class="fas fa-filter me-1"></i> Filtro de Pesquisa
+        </h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label asp-for="CodigoBarras" class="form-label small font-weight-bold">Código de Barras</label>
+                    <input asp-for="CodigoBarras" class="form-control" placeholder="789..." />
+                </div>
+                <div class="col-md-5">
+                    <label asp-for="Nome" class="form-label small font-weight-bold">Nome do Produto</label>
+                    <input asp-for="Nome" class="form-control" placeholder="Digite parte do nome..." />
+                </div>
+                <div class="col-md-4 d-flex justify-content-end pb-1">
+                    <button type="submit" class="btn btn-primary me-2 shadow-sm">
+                        <i class="fas fa-search me-1"></i> Pesquisar
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary me-2 shadow-sm">Limpar</a>
+                    <a asp-action="Create" class="btn btn-success shadow-sm">
+                        <i class="fas fa-plus me-1"></i> Novo Produto
+                    </a>
                 </div>
             </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label asp-for="Nome"></label>
-                    <input asp-for="Nome" class="form-control" />
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label asp-for="PrecoInicial"></label>
-                    <input asp-for="PrecoInicial" type="number" step="0.01" min="0" class="form-control" />
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label asp-for="PrecoFinal"></label>
-                    <input asp-for="PrecoFinal" type="number" step="0.01" min="0" class="form-control" />
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label asp-for="CategoriaId"></label>
-                    <select asp-for="CategoriaId"
-<<<<<<< HEAD
-                        asp-items="Model.CategoriasSelect"
-=======
-                        asp-items="Model.Categorias"
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-                        class="form-control">
-                        <option value="">Todas</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-2 pt-4">
-                <button type="submit" class="btn btn-primary">Pesquisar</button>
-<<<<<<< HEAD
-=======
-                <a asp-action="Index" class="btn btn-secondary">Limpar</a>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header py-3 bg-light">
+        <h6 class="m-0 font-weight-bold text-secondary text-uppercase small">
+            <i class="fas fa-box me-1"></i> Itens Cadastrados
+        </h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4" style="width: 15%">Cód. Barras</th>
+                        <th style="width: 35%">Nome do Produto</th>
+                        <th style="width: 15%">Categoria</th>
+                        <th style="width: 15%">Preço Unit.</th>
+                        <th class="text-center pe-4" style="width: 20%">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Resultados != null && Model.Resultados.Any())
+                    {
+                        foreach (var produto in Model.Resultados)
+                        {
+                            <tr>
+                                <td class="ps-4 font-monospace small">@produto.CodigoBarras</td>
+                                <td>
+                                    <div class="font-weight-bold text-dark">@produto.Nome</div>
+                                    <div class="small text-muted">ID: #@produto.ProdutoId</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="fas fa-tag me-1 text-secondary"></i> @produto.CategoriaNome
+                                    </span>
+                                </td>
+                                <td class="font-weight-bold text-primary">@produto.Preco.ToString("C")</td>
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a asp-action="Edit" asp-route-id="@produto.ProdutoId" 
+                                           class="btn btn-warning btn-sm text-white shadow-sm" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <a asp-action="Delete" asp-route-id="@produto.ProdutoId" 
+                                           class="btn btn-outline-danger btn-sm border-0" title="Remover">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <i class="fas fa-box-open fa-3x mb-3 d-block text-muted opacity-25"></i>
+                                <span class="text-muted">Nenhum produto encontrado na base de dados.</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-    </form>
-</fieldset>
-
-<table class="table">
-    <thead>
-        <tr>
-<<<<<<< HEAD
-            <th>Id</th>
-=======
-            <th>Código de Barras</th>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Ação</th>
-        </tr>
-    </thead>
-
-    <tbody>
-<<<<<<< HEAD
-    @foreach (var produto in Model.Resultado)
-    {
-        <tr>
-            <td>@produto.ProdutoId</td>
-            <td>@produto.Nome</td>
-            <td>@produto.Categoria?.Nome</td>
-=======
-    @foreach (var produto in Model.Resultados)
-    {
-        <tr>
-            <td>@produto.CodigoBarras</td>
-            <td>@produto.Nome</td>
-            <td>@produto.CategoriaNome</td>
->>>>>>> e81c0a1 (refactor: refatoração geral dos controllers de Produto e Movimentação)
-            <td>@produto.Preco.ToString(format: "C")</td>
-            <td>@produto.QuantidadeEstoque</td>
-            <td>
-                <a asp-action="Edit"
-                   asp-route-id="@produto.ProdutoId"
-                   class="btn btn-warning btn-sm">Editar</a>
-
-                <a asp-action="Delete"
-                   asp-route-id="@produto.ProdutoId"
-                   class="btn btn-danger btn-sm">Remover</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+    </div>
+</div>
