@@ -18,6 +18,14 @@
     </div>
 }
 
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-exclamation-triangle me-1"></i> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="card mb-4 shadow-sm border-left-primary">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">
@@ -59,6 +67,7 @@
                         <i class="fas fa-search me-1"></i> Filtrar
                     </button>
                     <a asp-action="Index" class="btn btn-secondary me-2 shadow-sm">Limpar</a>
+                    
                     <a asp-action="Create" class="btn btn-success shadow-sm">
                         <i class="fas fa-plus me-1"></i> Nova
                     </a>
@@ -122,26 +131,29 @@
                                 <td class="text-center pe-4">
                                     <div class="d-flex justify-content-center gap-1">
                                         <a asp-action="Detail" asp-route-id="@movimentacao.MovimentacaoId" 
-                                           class="btn btn-info btn-sm text-white shadow-sm" title="Visualizar Detalhes">
+                                           class="btn btn-info btn-sm text-white shadow-sm" title="Visualizar">
                                             <i class="fas fa-eye"></i>
                                         </a>
 
                                         @if (movimentacao.StatusId != 2)
                                         {
                                             <a asp-action="Edit" asp-route-id="@movimentacao.MovimentacaoId" 
-                                               class="btn btn-warning btn-sm text-white shadow-sm" title="Editar / Adicionar Itens">
+                                               class="btn btn-warning btn-sm text-white shadow-sm" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         }
 
-                                        <form asp-action="Delete" method="post" style="display:inline">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@movimentacao.MovimentacaoId" />
-                                            <button type="submit" class="btn btn-outline-danger btn-sm border-0" 
-                                                    title="Excluir Registro" onclick="return confirm('ATENÇÃO: Deseja realmente excluir esta movimentação? Isso não pode ser desfeito.')">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                        @if (User.IsInRole("Gerente") && movimentacao.StatusId != 2)
+                                        {
+                                            <form asp-action="Delete" method="post" style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@movimentacao.MovimentacaoId" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm border-0" 
+                                                        title="Excluir Registro" onclick="return confirm('Deseja realmente excluir esta movimentação?')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -152,7 +164,7 @@
                         <tr>
                             <td colspan="6" class="text-center py-5">
                                 <i class="fas fa-search fa-2x mb-3 d-block text-muted opacity-50"></i>
-                                <span class="text-muted">Nenhuma movimentação encontrada para o filtro aplicado.</span>
+                                <span class="text-muted">Nenhuma movimentação encontrada.</span>
                             </td>
                         </tr>
                     }

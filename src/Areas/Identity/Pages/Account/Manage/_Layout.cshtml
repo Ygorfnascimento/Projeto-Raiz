@@ -1,0 +1,28 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml"; 
+}
+
+<h2 class="mt-4">Minha Conta</h2>
+<p class="text-muted">Gerencie suas configurações de perfil e segurança.</p>
+<hr />
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group shadow-sm">
+            <a class="list-group-item list-group-item-action" asp-page="./Index">Perfil</a>
+            <a class="list-group-item list-group-item-action" asp-page="./Email">E-mail</a>
+            <a class="list-group-item list-group-item-action" asp-page="./ChangePassword">Senha</a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

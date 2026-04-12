@@ -1,0 +1,26 @@
+@page
+@using Raiz.Areas.Identity.Pages.Account
+@model LogoutModel
+@{
+    ViewData["Title"] = "Sair";
+}
+
+<header>
+    <div class="container mt-5 text-center">
+        <h1>@ViewData["Title"]</h1>
+        @{
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                    <p class="lead">Deseja realmente encerrar sua sessão?</p>
+                    <button type="submit" class="btn btn-danger btn-lg shadow-sm">Clique aqui para Sair</button>
+                </form>
+            }
+            else
+            {
+                <p class="text-success">Você saiu do sistema com sucesso.</p>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Voltar para a Home</a>
+            }
+        }
+    </div>
+</header>

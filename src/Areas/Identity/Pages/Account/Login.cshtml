@@ -1,0 +1,65 @@
+@page
+@using System.ComponentModel.DataAnnotations
+@model Raiz.Areas.Identity.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Autenticação";
+}
+@inject SignInManager<IdentityUser> SignInManager
+@inject ILogger<LoginModel> Logger
+@functions {
+    public class LoginModel
+    {
+        public string? ReturnUrl { get; set; }
+        
+        public InputModel Input { get; set; } = new InputModel();
+
+        public class InputModel
+        {
+            [Required(ErrorMessage = "O e-mail é obrigatório")]
+            [EmailAddress]
+            public string Email { get; set; } = string.Empty;
+
+            [Required(ErrorMessage = "A senha é obrigatória")]
+            [DataType(DataType.Password)]
+            public string Password { get; set; } = string.Empty;
+        }
+    }
+}
+@{
+    ViewData["Title"] = "Autenticação";
+}
+
+<div class="row justify-content-start">
+    <div class="col-xl-5 col-lg-6 col-md-8">
+        <h1 class="mt-4 mb-0">Autenticação</h1>
+        <p class="text-muted mb-4">Acesse sua conta para continuar</p>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    
+                    <div class="mb-3">
+                        <label class="small mb-1 fw-bold">E-mail</label>
+                        <input name="Input.Email" type="email" class="form-control bg-light"
+                               placeholder="gerente@merceariaraiz.com.br" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small mb-1 fw-bold">Senha</label>
+                        <input name="Input.Password" type="password" class="form-control bg-light" 
+                               placeholder="***" required />
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button id="login-submit" type="submit" class="btn btn-primary py-2">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using Raiz.ViewModels;
 
 namespace Raiz.Controllers
 {
+    [Authorize]
     public class MovimentacaoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -165,6 +167,7 @@ namespace Raiz.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Gerente")]
         public IActionResult Delete(int id)
         {
             var movimentacao = _context.Movimentacoes
@@ -183,6 +186,7 @@ namespace Raiz.Controllers
             _context.Movimentacoes.Remove(movimentacao);
             _context.SaveChanges();
 
+            TempData["Mensagem"] = "Movimentação excluída com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -225,14 +229,21 @@ namespace Raiz.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteItem(int id)
         {
-            var movimentacaoItem = _context.MovimentacaoItens.Find(id);
-            int? movimentacaoId = movimentacaoItem?.MovimentacaoId;
+            var movimentacaoItem = _context.MovimentacaoItens
+                .Include(i => i.Movimentacao)
+                .FirstOrDefault(i => i.MovimentacaoItemId == id);
 
-            if (movimentacaoItem is not null)
+            if (movimentacaoItem == null) return NotFound();
+
+            if (movimentacaoItem.Movimentacao!.StatusId == (int)Status.Finalizada)
             {
-                _context.MovimentacaoItens.Remove(movimentacaoItem);
-                _context.SaveChanges();
+                TempData["Erro"] = "Nota fechada não pode ser alterada.";
+                return RedirectToAction(nameof(Detail), new { id = movimentacaoItem.MovimentacaoId });
             }
+
+            int movimentacaoId = movimentacaoItem.MovimentacaoId;
+            _context.MovimentacaoItens.Remove(movimentacaoItem);
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Edit), new { id = movimentacaoId });
         }
@@ -250,10 +261,16 @@ namespace Raiz.Controllers
 
                 if (movimentacao == null) return NotFound();
                 if (movimentacao.StatusId == (int)Status.Finalizada) return Forbid();
+                if (!movimentacao.Itens.Any())
+                {
+                    TempData["Erro"] = "Adicione itens antes de finalizar.";
+                    return RedirectToAction(nameof(Edit), new { id = model.MovimentacaoId });
+                }
 
                 movimentacao.Finalizar();
                 _context.SaveChanges();
 
+                TempData["Mensagem"] = "Movimentação finalizada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -263,24 +280,16 @@ namespace Raiz.Controllers
             }
         }
 
-        #region Métodos Auxiliares
-        private List<SelectListItem> ObterListaTiposMovimentacoes()
-        {
-            return new List<SelectListItem>
-            {
-                new SelectListItem { Value = ((int)TipoMovimentacao.Entrada).ToString(), Text = "Entrada" },
-                new SelectListItem { Value = ((int)TipoMovimentacao.Saida).ToString(), Text = "Saída" }
-            };
-        }
+        #region Auxiliares
+        private List<SelectListItem> ObterListaTiposMovimentacoes() => new() {
+            new SelectListItem { Value = "1", Text = "Entrada" },
+            new SelectListItem { Value = "2", Text = "Saída" }
+        };
 
-        private List<SelectListItem> ObterListaStatus()
-        {
-            return new List<SelectListItem>
-            {
-                new SelectListItem { Value = ((int)Status.EmAndamento).ToString(), Text = "Em Andamento" },
-                new SelectListItem { Value = ((int)Status.Finalizada).ToString(), Text = "Finalizada" }
-            };
-        }
+        private List<SelectListItem> ObterListaStatus() => new() {
+            new SelectListItem { Value = "1", Text = "Em Andamento" },
+            new SelectListItem { Value = "2", Text = "Finalizada" }
+        };
         #endregion
     }
 }

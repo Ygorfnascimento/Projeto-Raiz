@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -17,35 +21,90 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .sb-nav-link-icon { width: 1.5rem; text-align: center; }
+        .btn-logout { width: 100%; text-align: left; padding: 0.5rem 1rem; border: 0; background: none; color: #dc3545 !important; }
+        .btn-logout:hover { background-color: #f8f9fa; }
+        .badge-role { font-size: 0.75rem; padding: 0.4em 0.8em; }
+
+        /* CONFIGURAÇÃO DA SIDEBAR PARA ARRASTE */
+        .sb-nav-fixed #layoutSidenav_nav {
+            width: 280px; 
+            min-width: 200px;
+            max-width: 500px;
+            position: relative;
+            transition: none !important;
+        }
+
+        #sidebarResizer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px; /* Aumentado levemente para facilitar o clique */
+            height: 100%;
+            cursor: col-resize;
+            z-index: 1050;
+            background: transparent;
+        }
+
+        #sidebarResizer:hover {
+            background: rgba(13, 110, 253, 0.4);
+        }
+
+        .sb-nav-fixed #layoutSidenav_content {
+            padding-left: 280px; 
+            transition: none !important;
+        }
+
+        /* Ajuste para o e-mail não quebrar linha e aparecer por completo ao arrastar */
+        .sb-sidenav-footer {
+            padding: 0.75rem;
+            background-color: #343a40;
+        }
+        
+        .user-info-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 100%;
+            color: rgba(255, 255, 255, 0.8);
+        }
     </style>
 </head>
 
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark shadow">
         <a class="navbar-brand ps-3 font-weight-bold" asp-controller="Home" asp-action="Index">
-            <i class="fas fa-store me-2"></i>Mercearia Raiz
+            <i class="fas fa-store me-2 text-primary"></i>Mercearia Raiz
         </a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle">
             <i class="fas fa-bars"></i>
         </button>
         
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group">
-                <input class="form-control" type="text" placeholder="Procurar produto..." aria-label="Search" />
-                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
-            </div>
-        </form>
+        <div class="ms-auto"></div>
         
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <ul class="navbar-nav me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user-circle fa-lg fa-fw"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                    <li><a class="dropdown-item" href="#!"><i class="fas fa-list me-2"></i>Log de Atividades</a></li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item text-danger" href="#!"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fas fa-user me-2"></i>Meu Perfil</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            @* AJUSTE NO FORM DE LOGOUT *@
+                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                                <button type="submit" class="dropdown-item btn-logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Sair
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Entrar</a></li>
+                    }
                 </ul>
             </li>
         </ul>
@@ -53,6 +112,8 @@
 
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
+            <div id="sidebarResizer"></div>
+
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
@@ -73,28 +134,45 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-boxes text-warning"></i></div>
                             Produtos
                         </a>
-                        <a class="nav-link" asp-controller="Categoria" asp-action="Index">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tags text-info"></i></div>
-                            Categorias
-                        </a>
 
-                        <div class="sb-sidenav-menu-heading">Relatórios</div>
-                        <a class="nav-link disabled" href="#">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                            Fechamento Mensal
-                        </a>
+                        @if (User.IsInRole("Gerente"))
+                        {
+                            <a class="nav-link" asp-controller="Categoria" asp-action="Index">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tags text-info"></i></div>
+                                Categorias
+                            </a>
+
+                            <div class="sb-sidenav-menu-heading">Configurações</div>
+                            <a class="nav-link" asp-controller="Usuario" asp-action="Index">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users-cog text-secondary"></i></div>
+                                Gestão de Acessos
+                            </a>
+                        }
                     </div>
                 </div>
+                
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logado como:</div>
-                    <span class="badge bg-success">Administrador</span>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="small text-muted">Usuário logado:</div>
+                        <div class="user-info-text mb-2">@User.Identity?.Name</div>
+                        
+                        @if (User.IsInRole("Gerente"))
+                        {
+                            <span class="badge bg-danger badge-role text-uppercase">Gerente</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success badge-role text-uppercase">Operador</span>
+                        }
+                    }
                 </div>
             </nav>
         </div>
 
         <div id="layoutSidenav_content" class="bg-light">
             <main>
-                <div class="container-fluid px-4">
+                <div class="container-fluid px-4 pt-3">
                     @RenderBody()
                 </div>
             </main>
@@ -106,9 +184,7 @@
                             &copy; @DateTime.Now.Year - <strong>Raiz Sistema de Estoque</strong>
                         </div>
                         <div>
-                            <a asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Privacidade</a>
-                            &middot;
-                            <span class="text-muted">Versão 1.0</span>
+                            <span class="badge text-dark border">v1.0.4-stable</span>
                         </div>
                     </div>
                 </div>
@@ -119,6 +195,38 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nav = document.getElementById('layoutSidenav_nav');
+            const content = document.getElementById('layoutSidenav_content');
+            const resizer = document.getElementById('sidebarResizer');
+
+            if (resizer) {
+                resizer.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', stopResizing);
+                    document.body.style.cursor = 'col-resize';
+                });
+            }
+
+            function handleMouseMove(e) {
+                let newWidth = e.clientX;
+                if (newWidth > 180 && newWidth < 500) {
+                    nav.style.width = newWidth + 'px';
+                    content.style.paddingLeft = newWidth + 'px';
+                }
+            }
+
+            function stopResizing() {
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', stopResizing);
+                document.body.style.cursor = 'default';
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

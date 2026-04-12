@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Novo Usuário";
+}
+
+<h1 class="mt-4">Cadastrar Funcionário</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a asp-action="Index">Gestão de Acessos</a></li>
+    <li class="breadcrumb-item active">Novo Usuário</li>
+</ol>
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger shadow-sm">
+        <i class="fas fa-exclamation-triangle me-2"></i> @TempData["Erro"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-user-plus me-1"></i> Dados de Acesso
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">E-mail (Login)</label>
+                        <input name="email" type="email" class="form-control" placeholder="exemplo@merceariaraiz.com.br" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Senha Inicial</label>
+                        <input name="password" type="password" class="form-control" required />
+                        <small class="text-muted">Mínimo 3 caracteres (conforme configurado no Program.cs).</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Cargo / Nível de Acesso</label>
+                        <select name="role" class="form-select">
+                            <option value="Operador">Operador (Estoque/Vendas)</option>
+                            <option value="Gerente">Gerente (Administrativo)</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-success px-4">Salvar Usuário</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

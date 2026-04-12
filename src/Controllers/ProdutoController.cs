@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Raiz.ViewModels;
 
 namespace Raiz.Controllers
 {
+    [Authorize] 
     public class ProdutoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,41 +18,28 @@ namespace Raiz.Controllers
             _context = context;
         }
 
-        // LISTAGEM COM FILTROS
         [HttpGet]
         public IActionResult Index([FromQuery] ProdutoPesquisaViewModel model)
         {
             var query = _context.Produtos.Include(p => p.Categoria).AsNoTracking();
 
-            // Filtros
             if (!string.IsNullOrEmpty(model.CodigoBarras))
-            {
                 query = query.Where(x => x.CodigoBarras == model.CodigoBarras);
-            }
 
             if (!string.IsNullOrEmpty(model.Nome))
-            {
                 query = query.Where(x => x.Nome.ToUpper().Contains(model.Nome.ToUpper()));
-            }
 
             if (model.PrecoInicial.HasValue)
-            {
                 query = query.Where(x => x.Preco >= model.PrecoInicial.Value);
-            }
 
             if (model.PrecoFinal.HasValue)
-            {
                 query = query.Where(x => x.Preco <= model.PrecoFinal.Value);
-            }
 
             if (model.CategoriaId.HasValue && model.CategoriaId > 0)
-            {
                 query = query.Where(x => x.CategoriaId == model.CategoriaId.Value);
-            }
 
-            // Mapeamento para a ViewModel de resultados
-            model.Resultados = query.Select(p => new ProdutoCadastroViewModel 
-            { 
+            model.Resultados = query.Select(p => new ProdutoCadastroViewModel
+            {
                 ProdutoId = p.ProdutoId,
                 Nome = p.Nome,
                 CodigoBarras = p.CodigoBarras,
@@ -61,23 +50,19 @@ namespace Raiz.Controllers
             }).ToList();
 
             model.Categorias = ObterListaCategorias();
-
             return View(model);
         }
 
-        // CADASTRO (GET)
+        [Authorize(Roles = "Gerente")]
         public IActionResult Create()
         {
-            var model = new ProdutoCadastroViewModel
-            {
-                Categorias = ObterListaCategorias()
-            };
+            var model = new ProdutoCadastroViewModel { Categorias = ObterListaCategorias() };
             return View(model);
         }
 
-        // CADASTRO (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Gerente")]
         public IActionResult Create(ProdutoCadastroViewModel model)
         {
             if (ModelState.IsValid)
@@ -94,15 +79,14 @@ namespace Raiz.Controllers
 
                 _context.Produtos.Add(produto);
                 _context.SaveChanges();
-
+                TempData["Mensagem"] = "Produto cadastrado com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
-
             model.Categorias = ObterListaCategorias();
             return View(model);
         }
 
-        // EDIÇÃO (GET)
+        [Authorize(Roles = "Gerente")]
         public IActionResult Edit(int id)
         {
             var produto = _context.Produtos.Find(id);
@@ -119,13 +103,12 @@ namespace Raiz.Controllers
                 QuantidadeEstoque = produto.QuantidadeEstoque,
                 Categorias = ObterListaCategorias()
             };
-
             return View(model);
         }
 
-        // EDIÇÃO (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Gerente")]
         public IActionResult Edit(ProdutoCadastroViewModel model)
         {
             if (ModelState.IsValid)
@@ -142,15 +125,14 @@ namespace Raiz.Controllers
 
                 _context.Produtos.Update(produto);
                 _context.SaveChanges();
-
+                TempData["Mensagem"] = "Produto atualizado com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
-
             model.Categorias = ObterListaCategorias();
             return View(model);
         }
 
-        // EXCLUSÃO (GET)
+        [Authorize(Roles = "Gerente")]
         public IActionResult Delete(int id)
         {
             var produto = _context.Produtos.Include(p => p.Categoria).FirstOrDefault(p => p.ProdutoId == id);
@@ -160,43 +142,39 @@ namespace Raiz.Controllers
             {
                 ProdutoId = produto.ProdutoId,
                 Nome = produto.Nome,
-                Descricao = produto.Descricao,
-                CodigoBarras = produto.CodigoBarras,
-                CategoriaId = produto.CategoriaId,
+                CategoriaNome = produto.Categoria?.Nome ?? "Sem Categoria",
                 Preco = produto.Preco,
                 QuantidadeEstoque = produto.QuantidadeEstoque
             };
-
             return View(model);
         }
 
-        // EXCLUSÃO (POST) - AQUI ESTAVA O ERRO
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int ProdutoId) 
+        [Authorize(Roles = "Gerente")]
+        public IActionResult DeleteConfirmed(int ProdutoId)
         {
-            // Buscamos pelo ID que vem do campo hidden do formulário
             var produto = _context.Produtos.Find(ProdutoId);
-            
             if (produto == null) return NotFound();
+
+            var possuiMovimentacao = _context.MovimentacaoItens.Any(i => i.ProdutoId == ProdutoId);
+            if (possuiMovimentacao)
+            {
+                TempData["Erro"] = "Impossível excluir: este produto possui histórico de movimentação.";
+                return RedirectToAction(nameof(Index));
+            }
 
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
-
+            TempData["Mensagem"] = "Produto removido com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 
-        // MÉTODO AUXILIAR PARA SELECT DE CATEGORIAS
         private List<SelectListItem> ObterListaCategorias()
         {
-            return _context.Categorias
-                .AsNoTracking() 
-                .Select(x => new SelectListItem
-                {
-                    Value = x.CategoriaId.ToString(),
-                    Text = x.Nome
-                })
-                .OrderBy(x => x.Text)
+            return _context.Categorias.AsNoTracking()
+                .OrderBy(x => x.Nome)
+                .Select(x => new SelectListItem { Value = x.CategoriaId.ToString(), Text = x.Nome })
                 .ToList();
         }
     }

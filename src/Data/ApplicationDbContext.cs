@@ -23,14 +23,12 @@ public class ApplicationDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Relacionamento Movimentacao -> Itens
         modelBuilder.Entity<MovimentacaoItem>()
             .HasOne(mi => mi.Movimentacao)
             .WithMany(m => m.Itens)
             .HasForeignKey(mi => mi.MovimentacaoId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Relacionamento Produto -> Itens
         modelBuilder.Entity<MovimentacaoItem>()
             .HasOne(mi => mi.Produto)
             .WithMany()

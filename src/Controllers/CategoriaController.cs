@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Raiz.Data;
@@ -6,6 +7,7 @@ using Raiz.ViewModels;
 
 namespace Raiz.Controllers;
 
+[Authorize] 
 public class CategoriaController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -33,6 +35,7 @@ public class CategoriaController : Controller
         return View(model);
     }
 
+    [Authorize(Roles = "Gerente")]
     public IActionResult Create()
     {
         return View(new CategoriaCadastroViewModel());
@@ -40,6 +43,7 @@ public class CategoriaController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Gerente")]
     public IActionResult Create(CategoriaCadastroViewModel model)
     {
         if (ModelState.IsValid)
@@ -57,6 +61,7 @@ public class CategoriaController : Controller
         return View(model);
     }
 
+    [Authorize(Roles = "Gerente")]
     public IActionResult Edit(int id)
     {
         var categoria = _context.Categorias.Find(id);
@@ -75,6 +80,7 @@ public class CategoriaController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Gerente")]
     public IActionResult Edit(CategoriaCadastroViewModel model)
     {
         if (ModelState.IsValid)
@@ -92,6 +98,7 @@ public class CategoriaController : Controller
         return View(model);
     }
     
+    [Authorize(Roles = "Gerente")]
     public IActionResult Delete(int id)
     {
         var categoria = _context.Categorias.Find(id);
@@ -108,10 +115,10 @@ public class CategoriaController : Controller
         return View(model);
     }
 
-    
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("Delete")]
+    [Authorize(Roles = "Gerente")]
     public IActionResult DeleteConfirmed(int CategoriaId) 
     {
         var categoria = _context.Categorias.Find(CategoriaId);
