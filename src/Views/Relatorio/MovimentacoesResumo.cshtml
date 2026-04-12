@@ -1,0 +1,38 @@
+@model IEnumerable<Raiz.ViewModels.MovimentacaoResumoViewModel>
+
+@{
+    ViewData["Title"] = "Resumo de Movimentações";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Resumo Financeiro</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item active">Movimentações</li>
+    </ol>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-6 col-md-12">
+                <div class="card mb-4 shadow border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                    Total de @item.Tipo
+                                </div>
+                                <div class="h3 mb-0 font-weight-bold @(item.Tipo == "Saida" ? "text-danger" : "text-success")">
+                                    @item.Total.ToString("C")
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas @(item.Tipo == "Saida" ? "fa-arrow-down text-danger" : "fa-arrow-up text-success") fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

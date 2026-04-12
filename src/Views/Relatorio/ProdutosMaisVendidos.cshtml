@@ -1,0 +1,52 @@
+@model IEnumerable<Raiz.ViewModels.ProdutoMaisVendidoViewModel>
+
+@{
+    ViewData["Title"] = "Produtos Mais Vendidos";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Relatório de Vendas</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item active">Produtos Mais Vendidos</li>
+    </ol>
+
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-warning text-dark">
+            <i class="fas fa-crown me-1"></i>
+            Top 10 Produtos Mais Vendidos
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Posição</th>
+                        <th>Nome do Produto</th>
+                        <th class="text-center">Quantidade Vendida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int posicao = 1; }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>@posicao º</strong></td>
+                            <td>@item.Produto</td>
+                            <td class="text-center">
+                                <span class="badge bg-success rounded-pill">@item.Quantidade unidades</span>
+                            </td>
+                        </tr>
+                        posicao++;
+                    }
+                </tbody>
+            </table>
+            
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center">
+                    Nenhuma venda registrada até o momento.
+                </div>
+            }
+        </div>
+    </div>
+</div>

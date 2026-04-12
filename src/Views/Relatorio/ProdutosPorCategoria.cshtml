@@ -1,0 +1,41 @@
+@model IEnumerable<Raiz.ViewModels.ProdutoPorCategoriaViewModel>
+
+@{
+    ViewData["Title"] = "Produtos por Categoria";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Produtos por Categoria</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item active">Produtos por Categoria</li>
+    </ol>
+
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-info text-white">
+            <i class="fas fa-chart-pie me-1"></i>
+            Distribuição de Itens
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome da Categoria</th>
+                        <th class="text-center">Quantidade de Produtos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Categoria</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary rounded-pill">@item.QuantidadeProdutos</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

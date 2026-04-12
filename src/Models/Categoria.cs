@@ -4,7 +4,8 @@ namespace Raiz.Models;
 
 public class Categoria
 {
-    public int CategoriaId { get; set; }
+    public virtual ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+        public int CategoriaId { get; set; }
 
     [Required]
     [StringLength(100)]
